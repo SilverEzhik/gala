@@ -37,7 +37,7 @@ release. Browse it online and look for other branches at:
 ====== Build the code ======
 
 Prepare the source and compile:
-    ./autogen.sh --prefix=/usr --libdir=/usr/lib/x86_64-linux-gnu/
+    ./autogen.sh --prefix=/usr
     make
     sudo make install
 
