@@ -248,8 +248,9 @@ namespace Gala
 			var seffect = new SaturationEffect (2.5f, 0.0f);
 			clone.add_effect (seffect);
 
-			var heffect = new BlurEffect (true, background.width, background.height);
-			var veffect = new BlurEffect (false, background.width, background.height);
+			var shader = new BlurShader (20);
+			var heffect = new HorizontalBlurEffect (shader, background.width);
+			var veffect = new VerticalBlurEffect (shader, background.height);
 
 			clone.add_effect (heffect);
 			clone.add_effect (veffect);
