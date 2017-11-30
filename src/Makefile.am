@@ -45,6 +45,8 @@ gala_VALASOURCES = \
 	ScreenshotManager.vala \
 	Settings.vala \
 	ShadowEffect.vala \
+	BlurEffect.vala \
+	SaturationEffect.vala \
 	TextShadowEffect.vala \
 	WindowListener.vala \
 	WindowManager.vala \

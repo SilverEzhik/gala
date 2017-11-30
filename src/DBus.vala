@@ -236,5 +236,25 @@ namespace Gala
 
 			return { rTotal, gTotal, bTotal, mean, variance };
 		}
+
+		public async void blur_background (int monitor) throws DBusError {
+			var background = wm.background_group.get_child_at_index (monitor);
+			if (background == null)
+				throw new DBusError.INVALID_ARGS ("Invalid monitor requested");
+
+			var clone = new Clutter.Clone (background);
+			clone.set_clip (0, 0, clone.width, 30);
+
+			var seffect = new SaturationEffect (2.5f, 0.0f);
+			clone.add_effect (seffect);
+
+			var heffect = new BlurEffect (true, background.width, background.height);
+			var veffect = new BlurEffect (false, background.width, background.height);
+
+			clone.add_effect (heffect);
+			clone.add_effect (veffect);
+
+			wm.background_group.add (clone);
+		}
 	}
 }
