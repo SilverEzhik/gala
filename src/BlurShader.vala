@@ -37,9 +37,13 @@ public class BlurShader : Object {
 
 		vertex_shader = new Cogl.Shader (Cogl.ShaderType.VERTEX);
 		vertex_shader.source (vertex_string);
+		vertex_shader.compile ();
+		print ("VERTEX: \n" + vertex_string);
 
 		fragment_shader = new Cogl.Shader (Cogl.ShaderType.FRAGMENT);
 		fragment_shader.source (fragment_string);
+		fragment_shader.compile ();
+		print ("FRAGMENT: \n" + fragment_string);
 	}
 
 	private static string construct_vertex_for_blur (int blur_radius, float sigma)
@@ -77,20 +81,20 @@ public class BlurShader : Object {
 		builder.append_printf ("varying vec2 blurCoordinates[%lu];\n", (1 + (number_of_optimized_offsets * 2)));
 		builder.append ("""
 				void main () {
-				cogl_position_out = cogl_modelview_projection_matrix * cogl_position_in;
+					cogl_position_out = cogl_modelview_projection_matrix * cogl_position_in;
 
-				vec2 singleStepOffset = vec2(texelWidthOffset, texelHeightOffset);
-				blurCoordinates[0] = cogl_tex_coord0_in.xy;
+					vec2 singleStepOffset = vec2(texelWidthOffset, texelHeightOffset);
+					blurCoordinates[0] = cogl_tex_coord0_in.xy;
 			""");
 
 		for (int current_optimized_offset = 0; current_optimized_offset < number_of_optimized_offsets; current_optimized_offset++) {
-			builder.append_printf ("blurCoordinates[%lu] = cogl_tex_coord0_in.xy + singleStepOffset * %f;\n",
+			builder.append_printf ("blurCoordinates[%lu] = cogl_tex_coord0_in.xy + singleStepOffset * %s;\n",
 									((long)(current_optimized_offset * 2) + 1),
-									optimized_gaussian_offsets[current_optimized_offset]);
+									float_to_cstr (optimized_gaussian_offsets[current_optimized_offset]));
 
-			builder.append_printf ("blurCoordinates[%lu] = cogl_tex_coord0_in.xy - singleStepOffset * %f;\n",
+			builder.append_printf ("blurCoordinates[%lu] = cogl_tex_coord0_in.xy - singleStepOffset * %s;\n",
 									((long)(current_optimized_offset * 2) + 2),
-									optimized_gaussian_offsets[current_optimized_offset]);
+									float_to_cstr (optimized_gaussian_offsets[current_optimized_offset]));
 		}
 
 		builder.append ("}\n");
@@ -126,8 +130,7 @@ public class BlurShader : Object {
 		builder.append_printf ("varying vec2 blurCoordinates[%lu];\n", (1 + (number_of_optimized_offsets * 2)));
 
 		builder.append ("""
-			void main()
-			{
+			void main() {
 				vec3 sum = vec3(0.0);
 				vec4 fragColor = texture2D(texture, cogl_tex_coord0_in.xy);
 			""");
@@ -170,7 +173,7 @@ public class BlurShader : Object {
 			}
 		}
 		
-		builder.append ("cogl_color_out = vec4(sum,fragColor.a);\n");
+		builder.append ("cogl_color_out = vec4(sum, 1.0f);\n");
 		builder.append ("}\n");
 		return builder.str;
     }
