@@ -37,13 +37,9 @@ public class BlurShader : Object {
 
 		vertex_shader = new Cogl.Shader (Cogl.ShaderType.VERTEX);
 		vertex_shader.source (vertex_string);
-		vertex_shader.compile ();
-		print ("VERTEX: \n" + vertex_string);
 
 		fragment_shader = new Cogl.Shader (Cogl.ShaderType.FRAGMENT);
 		fragment_shader.source (fragment_string);
-		fragment_shader.compile ();
-		print ("FRAGMENT: \n" + fragment_string);
 	}
 
 	private static string construct_vertex_for_blur (int blur_radius, float sigma)
@@ -173,7 +169,7 @@ public class BlurShader : Object {
 			}
 		}
 		
-		builder.append ("cogl_color_out = vec4(sum, 1.0f);\n");
+		builder.append ("cogl_color_out = vec4(sum, fragColor.a);\n");
 		builder.append ("}\n");
 		return builder.str;
     }
