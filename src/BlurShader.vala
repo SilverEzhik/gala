@@ -22,11 +22,13 @@ public class BlurShader : Object {
 
 	public int radius { get; construct; }
 
-	public BlurShader (int radius) {
+	public BlurShader (int radius)
+	{
 		Object (radius: radius);
 	}
 
-	construct {
+	construct
+	{
 		int sample_radius = 0;
 		float minimum_weight_edge = 1.0f / 256.0f;
 		sample_radius = (int)Math.floor(Math.sqrt(-2.0 * Math.pow(radius, 2.0) * Math.log(minimum_weight_edge * Math.sqrt(2.0 * Math.PI * Math.pow(radius, 2.0))) ));
@@ -133,8 +135,7 @@ public class BlurShader : Object {
 
 		builder.append_printf ("sum += texture2D(texture, blurCoordinates[0]).rgb * %s;\n", float_to_cstr (standard_gaussian_weights[0]));
 		
-		for (int blur_coord_index = 0; blur_coord_index < number_of_optimized_offsets; blur_coord_index++)
-		{
+		for (int blur_coord_index = 0; blur_coord_index < number_of_optimized_offsets; blur_coord_index++) {
 			float first_weight = standard_gaussian_weights[blur_coord_index * 2 + 1];
 			float second_weight = standard_gaussian_weights[blur_coord_index * 2 + 2];
 			float optimized_weight = first_weight + second_weight;
@@ -148,11 +149,9 @@ public class BlurShader : Object {
 								float_to_cstr (optimized_weight));
 		}
 		
-		if (true_number_optimized_offsets > number_of_optimized_offsets)
-		{
+		if (true_number_optimized_offsets > number_of_optimized_offsets) {
 			builder.append ("vec2 singleStepOffset = vec2(texelWidthOffset, texelHeightOffset);\n");
-			for (int currentOverlowTextureRead = number_of_optimized_offsets; currentOverlowTextureRead < true_number_optimized_offsets; currentOverlowTextureRead++)
-			{
+			for (int currentOverlowTextureRead = number_of_optimized_offsets; currentOverlowTextureRead < true_number_optimized_offsets; currentOverlowTextureRead++) {
 				float first_weight = standard_gaussian_weights[currentOverlowTextureRead * 2 + 1];
 				float second_weight = standard_gaussian_weights[currentOverlowTextureRead * 2 + 2];
 				
@@ -169,12 +168,13 @@ public class BlurShader : Object {
 			}
 		}
 		
-		builder.append ("cogl_color_out = vec4(sum, fragColor.a);\n");
+		builder.append ("cogl_color_out = vec4(sum, 1.0f);\n");
 		builder.append ("}\n");
 		return builder.str;
     }
     
-    private static string float_to_cstr (float val) {
+	private static string float_to_cstr (float val)
+	{
         return val.to_string ().replace (",", ".");
     }
 }

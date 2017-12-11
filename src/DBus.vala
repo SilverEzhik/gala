@@ -23,6 +23,8 @@ namespace Gala
 		static DBus? instance;
 		static WindowManager wm;
 
+		Clutter.Clone? panel_blur_actor;
+
 		[DBus (visible = false)]
 		public static void init (WindowManager _wm)
 		{
@@ -237,25 +239,28 @@ namespace Gala
 			return { rTotal, gTotal, bTotal, mean, variance };
 		}
 
-		public async void blur_background (int monitor) throws DBusError {
+		public async void blur_background_panel (int monitor, int x, int y, int width, int height) throws DBusError {
 			var background = wm.background_group.get_child_at_index (monitor);
 			if (background == null)
 				throw new DBusError.INVALID_ARGS ("Invalid monitor requested");
 
-			var clone = new Clutter.Clone (background);
-			clone.set_clip (0, 0, clone.width, 30);
+			if (panel_blur_actor == null) {
+				panel_blur_actor = new Clutter.Clone (background);
+				panel_blur_actor.set_clip (x, y, width, height);
 
-			var seffect = new SaturationEffect (2.5f, 0.0f);
-			clone.add_effect (seffect);
+				var seffect = new SaturationEffect (2.0f, 0.0f);
 
-			var shader = new BlurShader (20);
-			var heffect = new HorizontalBlurEffect (shader, background.width);
-			var veffect = new VerticalBlurEffect (shader, background.height);
+				var blur_shader = new BlurShader (20);
+				var heffect = new HorizontalBlurEffect (blur_shader, wm.background_group.width);
+				var veffect = new VerticalBlurEffect (blur_shader, wm.background_group.height);
 
-			clone.add_effect (heffect);
-			clone.add_effect (veffect);
-
-			wm.background_group.add (clone);
+				panel_blur_actor.add_effect (heffect);
+				panel_blur_actor.add_effect (veffect);
+				panel_blur_actor.add_effect (seffect);
+				wm.background_group.add (panel_blur_actor);
+			} else {
+				panel_blur_actor.set_clip (x, y, width, height);
+			}
 		}
 	}
 }
