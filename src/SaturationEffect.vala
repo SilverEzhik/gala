@@ -13,7 +13,7 @@ public class Gala.SaturationEffect : Clutter.ShaderEffect {
 		void main () {
 			vec4 sum = texture2D (texture, cogl_tex_coord0_in.xy);
 			vec3 mixed = saturate (sum.rgb, saturation) + vec3 (brightness, brightness, brightness);
-			cogl_color_out = vec4 (mixed, 1.0f);
+			cogl_color_out = vec4 (mixed, sum.a);
 		}
 	""";
 

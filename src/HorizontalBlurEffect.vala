@@ -37,7 +37,8 @@ public class Gala.HorizontalBlurEffect : Clutter.OffscreenEffect {
 		CoglFixes.set_uniform_1f (program, uniform_no, 0.0f);
 	}
 
-	public void set_width (float width) {
+	public void set_width (float width)
+	{
 		int uniform_no = program.get_uniform_location ("texelWidthOffset");
 		CoglFixes.set_uniform_1f (program, uniform_no, 1.0f / width);
 	}

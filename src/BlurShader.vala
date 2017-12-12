@@ -168,13 +168,13 @@ public class BlurShader : Object {
 			}
 		}
 		
-		builder.append ("cogl_color_out = vec4(sum, 1.0f);\n");
+		builder.append ("cogl_color_out = vec4(sum, fragColor.a);\n");
 		builder.append ("}\n");
 		return builder.str;
-    }
-    
+	}
+	
 	private static string float_to_cstr (float val)
 	{
-        return val.to_string ().replace (",", ".");
-    }
+		return val.to_string ().replace (",", ".");
+	}
 }

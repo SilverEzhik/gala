@@ -18,8 +18,8 @@
 public class Gala.VerticalBlurEffect : Clutter.OffscreenEffect {
 	Cogl.Program program;
 
-    public VerticalBlurEffect (BlurShader shader, float height)
-    {
+	public VerticalBlurEffect (BlurShader shader, float height)
+	{
 		program = new Cogl.Program ();
 
 		var vertex = shader.vertex_shader;
@@ -37,7 +37,8 @@ public class Gala.VerticalBlurEffect : Clutter.OffscreenEffect {
 		set_height (height);
 	}
 
-	public void set_height (float height) {
+	public void set_height (float height) 
+	{
 		int uniform_no = program.get_uniform_location ("texelHeightOffset");
 		CoglFixes.set_uniform_1f (program, uniform_no, 1.0f / height);
 	}

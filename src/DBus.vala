@@ -239,10 +239,21 @@ namespace Gala
 			return { rTotal, gTotal, bTotal, mean, variance };
 		}
 
-		public async void blur_background_panel (int monitor, int x, int y, int width, int height) throws DBusError {
+		/**
+		 * Blurs a specified area of the background actor, if the background is already
+		 * blurred, this method will move and resize the blur area with the new, supplied values.
+		 * 
+		 * @param monitor The monitor where the background blur will be applied
+		 * @param x       The X position of the blur area
+		 * @param y       The Y position of the blur area
+		 * @param width   The width of the blur area
+		 * @param height  The height of the blur area
+		 */
+		public void blur_background_panel (int monitor, int x, int y, int width, int height) throws DBusError {
 			var background = wm.background_group.get_child_at_index (monitor);
-			if (background == null)
+			if (background == null) {
 				throw new DBusError.INVALID_ARGS ("Invalid monitor requested");
+			}
 
 			if (panel_blur_actor == null) {
 				panel_blur_actor = new Clutter.Clone (background);
@@ -260,6 +271,24 @@ namespace Gala
 				wm.background_group.add (panel_blur_actor);
 			} else {
 				panel_blur_actor.set_clip (x, y, width, height);
+			}
+		}
+
+		/**
+		 * Removes the blur effect on the background on the specified monitor.
+		 * If there is no blur applied on the specified monitor, this method will do
+		 * nothing.
+		 * 
+		 * @param monitor The monitor where the blur effect should be removed.
+		 */
+		public void remove_blur_background_panel (int monitor) throws DBusError {
+			var background = wm.background_group.get_child_at_index (monitor);
+			if (background == null)
+				throw new DBusError.INVALID_ARGS ("Invalid monitor requested");
+			
+			if (panel_blur_actor != null) {
+				panel_blur_actor.destroy ();
+				panel_blur_actor = null;
 			}
 		}
 	}
