@@ -43,7 +43,7 @@ namespace Gala
 			debug ("Flashing area");
 
 			double[] keyframes = { 0.3f, 0.8f };
-			GLib.Value[] values = { 255U, 0U };
+			GLib.Value[] values = { 180U, 0U };
 
 			var transition = new Clutter.KeyframeTransition ("opacity");
 			transition.duration = 200;
