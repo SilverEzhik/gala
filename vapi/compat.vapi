@@ -19,3 +19,9 @@ namespace Clutter
 	[CCode (cname = "clutter_backend_get_cogl_context")]
 	public static unowned Cogl.Context backend_get_cogl_context (Clutter.Backend backend);
 }
+
+namespace Meta
+{
+	[CCode (cname = "meta_cursor_tracker_get_pointer")]
+	public static void cursor_tracker_get_pointer (Meta.CursorTracker tracker,  out int x, out int y, Clutter.ModifierType mods);
+}
