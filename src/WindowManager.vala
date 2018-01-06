@@ -594,7 +594,7 @@ namespace Gala
 		/**
 		 * {@inheritDoc}
 		 */
-		public void perform_action (ActionType type)
+		public int perform_action (ActionType type)
 		{
 			var screen = get_screen ();
 			var display = screen.get_display ();
@@ -634,7 +634,7 @@ namespace Gala
 					string command = "";
 					var line = BehaviorSettings.get_default ().hotcorner_custom_command;
 					if (line == "")
-						return;
+						return -1;
 
 					var parts = line.split (";;");
 					// keep compatibility to old version where only one command was possible
@@ -679,10 +679,17 @@ namespace Gala
 						window_overview.open (hints);
 					}
 					break;
+                case ActionType.WORKSPACE_VIEW_IS_OPEN:
+					if (workspace_view.is_opened ())
+						return 1;
+					else
+						return 0;
+
 				default:
 					warning ("Trying to run unknown action");
 					break;
 			}
+            return -1;
 		}
 
 		WindowMenu? window_menu = null;

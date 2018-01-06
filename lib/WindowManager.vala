@@ -26,7 +26,8 @@ namespace Gala
 		OPEN_LAUNCHER,
 		CUSTOM_COMMAND,
 		WINDOW_OVERVIEW,
-		WINDOW_OVERVIEW_ALL
+		WINDOW_OVERVIEW_ALL,
+        WORKSPACE_VIEW_IS_OPEN
 	}
 
 	/**
@@ -128,7 +129,7 @@ namespace Gala
 		 *
 		 * @param type The type of action to perform
 		 */
-		public abstract void perform_action (ActionType type);
+		public abstract int perform_action (ActionType type);
 
 		/**
 		 * Moves the window to the workspace next to its current workspace in the given direction.

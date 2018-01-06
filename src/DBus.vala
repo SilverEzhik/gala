@@ -64,9 +64,9 @@ namespace Gala
 				assert_not_reached ();
 		}
 
-		public void perform_action (ActionType type)
+		public int perform_action (ActionType type)
 		{
-			wm.perform_action (type);
+			return wm.perform_action (type);
 		}
 
 		const double SATURATION_WEIGHT = 1.5;
